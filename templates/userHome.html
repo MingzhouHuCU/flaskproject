@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>ETF Search App</title>
+
+   
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    <link href="../static/css/signup.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+    <script src="../static/js/jquery-1.11.2.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+    <script src="https://www.amcharts.com/lib/3/serial.js"></script>
+    <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+    <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+    <script src="https://www.amcharts.com/lib/3/plugins/dataloader/dataloader.min.js"></script>
+    <script src="https://www.amcharts.com/lib/3/pie.js"></script>
+    <script>
+	$(function (){
+		$.ajax({
+			url : '/getETF',
+			type : 'GET',
+			success: function(res){
+
+				var etfObj = JSON.parse(res);
+                etfObj = etfObj.reverse();
+				$('#ulist').empty();
+				$('#listTemplate').tmpl(etfObj).appendTo('#ulist');
+				
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+	});
+    $(function (){
+		$.ajax({
+			url : '/getETFInfo',
+			type : 'GET',
+			success: function(res){
+				var etfInfoObj = JSON.parse(res);
+				$('#Des').tmpl(etfInfoObj).appendTo('#description');
+				
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+	});
+    $(function (){
+		$.ajax({
+			url : '/getETFHolding',
+			type : 'GET',
+			success: function(res){
+
+				var etfHoldObj = JSON.parse(res);
+                etfHoldObj.sort(function(a,b){
+                    return a.Weight - b.Weight
+                });
+                etfHoldObj.reverse();
+                console.log(etfHoldObj);
+				var chart = AmCharts.makeChart("chart1div", {
+                "type": "serial",
+                "theme": "light",
+                "marginRight": 70,
+                "rotate":true,
+                "dataProvider": etfHoldObj,
+                "title": "Top 10 Holding",
+                "valueAxes": [{
+                    "axisAlpha": 0,
+                    "position": "top"
+                  }],
+                "graphs": [{
+                    "balloonText": "<b>[[category]]: [[value]]</b>",
+                    "fillAlphas": 0.9,
+                    "lineAlpha": 0.2,
+                    "type": "column",
+                    "valueField": "Weight"
+                  }],
+                "categoryField": "Name",
+                "categoryAxis": {
+                    "gridPosition": "start"
+                  },
+                "export": {
+                    "enabled": true
+                  }
+
+                });
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+	});
+    $(function (){
+		$.ajax({
+			url : '/getETFSector',
+			type : 'GET',
+			success: function(res){
+
+				var etfSectorObj = JSON.parse(res);
+                console.log(etfSectorObj);
+                var chart = AmCharts.makeChart("chart2div", {
+                  "type": "pie",
+                  "theme": "light",
+                  "dataProvider": etfSectorObj,
+                  "valueField": "Weight",
+                  "titleField": "Sector",
+                  "title": "Sector Allocation",
+                  "balloon": {
+                    "fixedPosition": true
+                  },
+                  "export": {
+                    "enabled": true
+                  }
+                });
+				
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+	});
+    $(function (){
+		$.ajax({
+			url : '/getETFCountry',
+			type : 'GET',
+			success: function(res){
+
+				var etfCountryObj = JSON.parse(res);
+                console.log(etfCountryObj);
+                if (etfCountryObj.length > 0){
+                var chart = AmCharts.makeChart("chart3div", {
+                  "type": "pie",
+                  "theme": "light",
+                  "dataProvider": etfCountryObj,
+                  "valueField": "Weight",
+                  "titleField": "Country",
+                  "title": "Sector Allocation",
+                  "balloon": {
+                    "fixedPosition": true
+                  },
+                  "export": {
+                    "enabled": true
+                  }
+                });
+			}
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+	});
+
+    </script>
+    
+   
+  </head>
+   <style>
+     .panel-body { display:inline-block;margin:0px; font:medium;}
+     .list-group { margin-bottom:0px; }
+   </style>
+  <body>
+
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+	    <li role="presentation"><a href="#">User Home</a></li>
+	    <li role="presentation"><a href="/showSearchETF">Search ETF</a></li>
+            <li role="presentation" class="active"><a href="/logout">Logout</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">ETF Search App</h3>
+      </div>
+
+     <h3 >ETF Information</h3>
+     <script id="Des" type="text/x-jQuery-tmpl">
+
+         <label>${Description}</label>
+
+    </script>
+     <p id="description"></p>
+     <div id="chart1div" style="width:750px;height:450px;"></div>
+     <div id="chart2div" style="width:750px;height:450px;"></div>
+     <div id="chart3div" style="width:960px;height:540px;"></div>
+
+
+        <h3 >ETF Search History</h3>
+        <script id="listTemplate" type="text/x-jQuery-tmpl">
+ 	<li class="list-group-item">
+        <div class="row">
+        <div class="col-md-6">
+         <label>${Symbol}</label>
+        </div>
+        <div class="col-md-6">
+         <label>${Date}</label>
+        </div>
+        </div>
+        </li>
+    </script>
+
+	
+    <div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            
+                <div class="panel-body">
+
+                    <ul id="ulist" class="list-group">
+                        
+ 
+                        
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    </div>
+     
+    </div>
+  </body>
+</html>
+
