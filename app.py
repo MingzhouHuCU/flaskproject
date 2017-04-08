@@ -26,6 +26,10 @@ def showSignUp():
 def showSearchETF():
     return render_template('searchETF.html')
 
+@app.route('/showUserPreference')
+def showUserPreference():
+    return render_template('userPreference.html')
+
 @app.route('/showSignin')
 def showSignin():
     if session.get('user'):
@@ -242,6 +246,19 @@ def searchETF():
     finally:
         cursor.close()
         conn.close()
+
+@app.route('/userPreference',methods=['POST'])
+def userPreference():
+    try:
+        if session.get('user'):
+            _sector = request.form['inputSector']
+            _term = request.form['inputTerm']
+            print(_sector)
+            print(_term)
+            return redirect('/showUserPreference')
+    except Exception as e:
+        return render_template('error.html',error = str(e))
+
 
 @app.route('/validateLogin',methods=['POST'])
 def validateLogin():
