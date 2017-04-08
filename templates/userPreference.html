@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>ETF Search App</title>
+
+   
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    
+    <script src="../static/js/jquery-1.11.2.js"></script>
+    
+   
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation"><a href="/showSignin">User Home</a></li>
+	        <li role="presentation"><a href="/showSearchETF">Search ETF</a></li>
+            <li role="presentation" class="active"><a href="#">Preference</a></li>
+            <li role="presentation" ><a href="/logout">Logout</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">ETF Search App</h3>
+      </div>
+     <section>
+      <form class="form-horizontal" method="post" action="/userPreference">
+<fieldset>
+
+<!-- Form Name -->
+<legend>Invest Preference</legend>
+
+<!-- Dropdown input-->
+<div class="form-group">
+    <h3>Sector</h3>
+    <select class="selectpicker" name="inputSector">
+        <optgroup label="Sector">
+        <option value=1>Basic Materials</option>
+        <option value=2>Cyclical Consumer Goods</option>
+        <option value=3>Energy</option>
+        <option value=4>Financials</option>
+        <option value=5>Healthcare</option>
+        <option value=6>Industrials</option>
+        <option value=7>Non-Cyclical Consumer Goods</option>
+        <option value=8>Technology</option>
+        <option value=9>Telecommunications Service</option>
+        <option value=10>Utilities</option>
+    </optgroup>
+    </select>
+
+
+    <p>Select your sector preference</p>
+
+ 
+</div>
+<div class="form-group">
+    <h3>Investment Horizon</h3>
+    <select class="selectpicker" name="inputTerm">
+        <optgroup label="Investment Horizon">
+        <option value=1>Short-term</option>
+        <option value=2>Mid-term</option>
+        <option value=3>Long-term</option>
+    </optgroup>
+    </select>
+
+    <p>Select your investment horizon</p>
+</div>
+<!-- Button -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="preferencebutton"></label>
+  <div class="col-md-4">
+    <input id="preferencebutton" name="preferencebutton" class="btn btn-primary" type="submit" value="Search" />
+  </div>
+</div>
+
+</fieldset>
+</form>
+      
+</section>
+
+    </div>
+  </body>
+</html>
+
