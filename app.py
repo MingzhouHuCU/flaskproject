@@ -77,38 +77,6 @@ def getETFInfo():
     except Exception as e:
         return render_template('error.html', error = str(e))
 
-@app.route('/getETFCountry')
-def getETFCountry():
-    try:
-        if session.get('user'):
-            _user = session.get('user')
-
-            con = mysql.connect()
-            cursor = con.cursor()
-            cursor.callproc('sp_GetETFByUser',(_user,))
-            etfs = cursor.fetchall()
-
-            _etf_symbol = etfs[-1]
-            cursor.callproc('sp_GetETFCountry',(_etf_symbol[1],))
-            etfCountry = cursor.fetchall()
-    
-
-            etfs_dict = []
-            if len(etfCountry) is 0:
-                return json.dumps(etfs_dict)
-            else:
-                for etf in etfCountry:
-                    etf_dict = {
-                        'Country': etf[1],
-                        'Weight': etf[2]}
-                    etfs_dict.append(etf_dict)
-
-                return json.dumps(etfs_dict)
-        else:
-            return render_template('error.html', error = 'Unauthorized Access')
-    except Exception as e:
-        return render_template('error.html', error = str(e))
-
 @app.route('/getETFSector')
 def getETFSector():
     try:
@@ -255,7 +223,17 @@ def userPreference():
             _term = request.form['inputTerm']
             print(_sector)
             print(_term)
-            return redirect('/showUserPreference')
+
+            # Do stock stock pick
+            # scarp for stock data
+            # generate graph
+            # generate world cloud
+            # generate sentimental analysis
+            # (maybe) network analysis
+            stock_img = 'static/charts/aapl-stock.jpg'
+            wordCloud = 'static/charts/word-cloud-big-data-4.jpg'
+            return render_template('stockResult.html',chart_src_stock="/"+stock_img,chart_src_wordCloud="/"+wordCloud)
+
     except Exception as e:
         return render_template('error.html',error = str(e))
 

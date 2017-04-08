@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>ETF Search App</title>
+    <title>Salty Fish Investment Advisors</title>
 
    
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
@@ -125,36 +125,6 @@
 			}
 		});
 	});
-    $(function (){
-		$.ajax({
-			url : '/getETFCountry',
-			type : 'GET',
-			success: function(res){
-
-				var etfCountryObj = JSON.parse(res);
-                console.log(etfCountryObj);
-                if (etfCountryObj.length > 0){
-                var chart = AmCharts.makeChart("chart3div", {
-                  "type": "pie",
-                  "theme": "light",
-                  "dataProvider": etfCountryObj,
-                  "valueField": "Weight",
-                  "titleField": "Country",
-                  "title": "Sector Allocation",
-                  "balloon": {
-                    "fixedPosition": true
-                  },
-                  "export": {
-                    "enabled": true
-                  }
-                });
-			}
-			},
-			error: function(error){
-				console.log(error);
-			}
-		});
-	});
 
     </script>
     
@@ -176,7 +146,7 @@
         <li role="presentation"><a href="/logout">Logout</a></li>
           </ul>
         </nav>
-        <h3 class="text-muted">ETF Search App</h3>
+        <h3 class="text-muted">Salty Fish Investment Advisors</h3>
       </div>
 
      <h3 >ETF Information</h3>
@@ -188,7 +158,6 @@
      <p id="description"></p>
      <div id="chart1div" style="width:750px;height:450px;"></div>
      <div id="chart2div" style="width:750px;height:450px;"></div>
-     <div id="chart3div" style="width:960px;height:540px;"></div>
 
 
         <h3 >ETF Search History</h3>
