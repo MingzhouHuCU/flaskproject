@@ -1,13 +1,42 @@
 {% extends "layout.html" %}
 {% block content %}
+    <div class="container">
     <legend>Stock Performance</legend>
-	<div class="image-container">
-		<img src="{{chart_src_stock}}" height=400 width=800>
-	</div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="image-container">
+            <img style='float:left;width:400px;height:200px; margin-right:10px;' src="{{chart_src_stock}}" />
+            </div>
+            <p>Stock symbol: {{stock_symbol}}</p>
+            <p>Current price: {{current_price}}</p>
+        </div>
+    </div>
+    </div>
+
+    <div class="container">
     <legend>Stock Wordcloud</legend>
-	<div class="image-container">
-		<img src="{{chart_src_wordCloud}}" height=400 width=800>
-	</div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="image-container">
+            <img style='float:left;width:400px;height:200px; margin-right:10px;' src="{{chart_src_wordCloud}}" />
+            </div>
+            <p>This word cloud comes from lastest 20 news from Google Finance New.</p>
+        </div>
+    </div>
+    </div>
+
+    <div class="container">
     <legend>Stock Sentimental Analysis</legend>
+    <div class="row">
+        <div class="col-md-12">
+            <p>From lastest 20 news from Google Finance New </p> 
+            <p>The average percentage of positive sentiment words is {{positive_sent}}</p>
+            <p>The average percentage of negative sentiment words is {{negative_sent}}</p>
+            <p>The positive and negative ratio is {{pos_neg}}</p>
+            
+        </div>
+    </div>
+    </div>
+
 
 {% endblock %}

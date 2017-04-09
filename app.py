@@ -232,7 +232,13 @@ def userPreference():
             # (maybe) network analysis
             stock_img = 'static/charts/aapl-stock.jpg'
             wordCloud = 'static/charts/word-cloud-big-data-4.jpg'
-            return render_template('stockResult.html',chart_src_stock="/"+stock_img,chart_src_wordCloud="/"+wordCloud)
+            stockSymbol = 'AAPL'
+            currentPrice = 134.34
+            positiveSent = "1.34%"
+            negativeSent = "0.91%"
+            posToNeg = 1.48
+            return render_template('stockResult.html',chart_src_stock="/"+stock_img,chart_src_wordCloud="/"+wordCloud,stock_symbol = stockSymbol,\
+                                    current_price = currentPrice,positive_sent=positiveSent,negative_sent=negativeSent,pos_neg=posToNeg)
 
     except Exception as e:
         return render_template('error.html',error = str(e))
