@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+  <head>
+    <title>Salty Fish Investment Advisors</title>     
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+
+  </head>
+<body>
+  <div class="container">
+  <div class="header">
+  <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation"><a href="/showSignin">User Home</a></li>
+	        <li role="presentation"><a href="/showSearchETF">Search ETF</a></li>
+	        <li role="presentation"><a href="/showUserPreference">Preference</a></li>
+            <li role="presentation" ><a href="/logout">Logout</a></li>
+          </ul>
+        </nav>
+   <h3 class="text-muted">Salty Fish Investment Advisors</h3>
+   </div>
+   </div>
+   <div class=page>
+    {% block content %}{% endblock %}
+   </div>
+
+</body>
