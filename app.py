@@ -172,12 +172,11 @@ def searchETF():
             cursor = conn.cursor()
             cursor.callproc('sp_checkETF',(_etfsymbol,))
             check = cursor.fetchall()
-            
 
             if len(check) is 0:
-                _des,_holding,_sector,_country = _scrapper(_etfsymbol)
 
-                cursor.callproc('sp_addETF',(_etfsymbol,_des))
+                _holding,_sector = _scrapper(_etfsymbol)
+
                 _holding = json.loads(_holding)
                 for _key in _holding['Name']:
                     _name_h=_holding['Name'][_key]
@@ -190,12 +189,6 @@ def searchETF():
                     _weight_s=_sector['Weight'][_key]
                     cursor.callproc('sp_addETFSector',(_etfsymbol,_sector_s,_weight_s))
                 
-                if len(_country) > 0:
-                    _country = json.loads(_country)
-                    for _key in _country['Country']:
-                        _country_c=_country['Country'][_key]
-                        _weight_c=_country['Weight'][_key]
-                        cursor.callproc('sp_addETFCountry',(_etfsymbol,_country_c,_weight_c))
 
             cursor.callproc('sp_searchETF',(_etfsymbol,_user))
             data = cursor.fetchall()
@@ -224,6 +217,7 @@ def userPreference():
             print(_sector)
             print(_term)
 
+            stockSymbol = 'AAPL'
             # Do stock stock pick
             # scarp for stock data
             # generate graph
@@ -231,9 +225,11 @@ def userPreference():
             # generate sentimental analysis
             # (maybe) network analysis
             stock_img = 'static/charts/aapl-stock.jpg'
-            wordCloud = 'static/charts/word-cloud-big-data-4.jpg'
-            stockSymbol = 'AAPL'
             currentPrice = 134.34
+
+            wordCloud = 'static/charts/word-cloud-big-data-4.jpg'
+            
+            
             positiveSent = "1.34%"
             negativeSent = "0.91%"
             posToNeg = 1.48
@@ -315,14 +311,13 @@ def signUp():
 def _scrapper(ticker):
     import requests as rs
     from lxml import html
+    from lxml import etree
     url = "https://uat-www.spdrs.com/product/fund.seam?ticker=%s" % (ticker)
     response = rs.get(url)
     if response.status_code == 200:
         import bs4
         soup = bs4.BeautifulSoup(response.content, 'html.parser')
 
-        obj = soup.find('div',class_="objective")
-        des = obj.find('p').text
 
         holding = soup.find('div',id="FUND_TOP_TEN_HOLDINGS")
         table_body = holding.find('tbody')
@@ -332,28 +327,18 @@ def _scrapper(ticker):
         for row in rows:
             cols = [ele.strip() for ele in row.text.split('\n')]
             data.append([ele for ele in cols if ele])
-
+        
+        
         sector = soup.find('div',id="SectorsAllocChart")
         s = sector.find('div',style="display: none")
         se = list(s)[0].encode()
-        from lxml import etree
+        print(se)
         root = etree.XML(se)
-
+        print(root)
         data_s = []
         for element in root.iter('attribute'):
             data_s.append([element.find('label').text,element.find('value').text])
-
-
-        sector = soup.find('div',class_='holdings tab_section')
-        c_table = sector.find(lambda tag: tag.name == 'div' and tag.get('class') == ['sect'] and tag.get('id') == None)
-        data_c = []
-        if c_table is not None:
-            rows = c_table.find_all('tr')
-
-
-            for row in rows:
-                cols = [ele.strip() for ele in row.text.split('\n')]
-                data_c.append([ele for ele in cols if ele])  
+ 
 
         import pandas as pd
 
@@ -370,18 +355,9 @@ def _scrapper(ticker):
         df_s.index=df_s.index+1
         sector_j = df_s.to_json()
 
-        country_j = {}
-        if len(data_c) > 0:
-            df_c = pd.DataFrame(data_c)
-             
-            df_c.columns=['Country','Weight']
-            df_c['Weight'] = df_c['Weight'].replace('%','',regex=True).astype('float')/100
-            df_c.index=df_c.index+1
-            country_j = df_c.to_json()
 
-        return des, holding_j, sector_j, country_j
-
-
+        return holding_j, sector_j
+        
 
 if __name__ == "__main__":
     app.run(port=5002)
